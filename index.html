@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto-Play Audio</title>
+    <title>Video Playback with Close Function</title>
     <style>
         body, html {
             margin: 0;
@@ -14,7 +14,7 @@
         }
         body {
             background-image: url('./assets/img/Intro.webp');
-            background-size: 100%;
+            background-size: cover;
             background-position: center;
             animation: moveBackground 30s infinite alternate ease-in-out;
         }
@@ -29,7 +29,7 @@
                 background-position: center;
             }
         }
-        .navigate-button {
+        .navigate-button, .close-video {
             padding: 10px 20px;
             font-size: 20px;
             cursor: pointer;
@@ -39,25 +39,42 @@
             opacity: 0.7;
             position: absolute;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            transform: translateX(-50%);
         }
-        .navigate-button:hover {
+        .navigate-button:hover, .close-video:hover {
             opacity: 1;
+        }
+        .navigate-button {
+            left: 50%;
+        }
+        .close-video {
+            display: none; /* Initially hidden */
+            top: 20px;
+            left: 100px;
+            z-index: 100; /* Make sure it's above the video */
+        }
+        video#fullscreenVideo {
+            display: none; /* Initially hide the video */
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: 1; /* Ensure video is below UI elements but above background */
         }
         .back-button {
             position: absolute;
-            top: 90%; /* Center vertically */
-            left: 85%; /* Center horizontally */
-            transform: translate(-50%, -50%); /* Adjust for the button's dimensions to truly center it */
+            top: 90%;
+            left: 85%;
+            transform: translate(-50%, -50%);
             padding: 10px 20px;
-            background-color: #007bff; /* Bootstrap primary blue */
+            background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            text-decoration: none; /* Remove underline from links styled as buttons */
-            z-index: 2; /* Ensure the button is above the images */
+            text-decoration: none;
+            z-index: 2;
         }
     </style>
 </head>
@@ -65,19 +82,49 @@
 
 <a href="./templates/VanMap.html" class="back-button">Go To Next Page</a>
 
-<audio id="backgroundAudio" muted>
-    <source src="./assets/audio/Intro.mp3" type="audio/mp3">
-    Your browser does not support the audio element.
-</audio>
+<!-- Video element (hidden initially) -->
+<video id="fullscreenVideo" controls>
+    <source src="./assets/audio/Intro.mp4" type="video/mp4">
+    Your browser does not support the video element.
+</video>
 
-<button class="navigate-button" onclick="playAudio()">Play Audio</button>
+<button class="navigate-button" onclick="playVideo()">Play Video</button>
+<button class="close-video" onclick="closeVideo()">Close Video</button>
 
 <script>
-    function playAudio() {
-        var audio = document.getElementById('backgroundAudio');
-        // Unmute the audio
-        audio.muted = false;
-        audio.play();
+    function playVideo() {
+        var video = document.getElementById('fullscreenVideo');
+        video.style.display = "block"; // Make the video visible
+        video.play();
+
+        // Show the close button
+        document.querySelector('.close-video').style.display = 'block';
+
+        // Attempt to play video in fullscreen mode
+        if (video.requestFullscreen) {
+            video.requestFullscreen();
+        } else if (video.webkitRequestFullscreen) { /* Safari */
+            video.webkitRequestFullscreen();
+        } else if (video.msRequestFullscreen) { /* IE11 */
+            video.msRequestFullscreen();
+        }
+    }
+
+    function closeVideo() {
+        var video = document.getElementById('fullscreenVideo');
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) { /* Safari */
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) { /* IE11 */
+            document.msExitFullscreen();
+        }
+        video.pause();
+        video.currentTime = 0; // Reset video to start
+        video.style.display = "none"; // Hide the video
+
+        // Also hide the close button again
+        document.querySelector('.close-video').style.display = 'none';
     }
 </script>
 
