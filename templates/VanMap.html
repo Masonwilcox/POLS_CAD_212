@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Six Image Layout with Text Overlay</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #00072D;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .header-text {
+            text-align: center;
+            width: 80%;
+            height: 10%;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            height: 90%;
+        }
+        .image-container {
+            position: relative;
+            width: 40%;
+            height: 40%;
+            top: 48px;
+            cursor: pointer; /* Make it clear it's clickable */
+        }
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .text-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* Dark background for text visibility */
+            color: white;
+            text-align: center;
+            font-size: 20px;
+        }
+        .image-container:hover img {
+            transform: scale(1.1);
+            transition: transform 0.5s ease;
+        }
+        .video-container {
+            display: none; /* Hide video initially */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Ensure it's above everything else */
+        }
+        video {
+            width: 100%;
+            height: 100%;
+        }
+        .close-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            color: white;
+            cursor: pointer;
+            z-index: 1001; /* Above the video */
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Bootstrap primary blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+ <a href="../index.html" class="back-button">Back</a>
+
+<div class="header-text">
+    <h1>Explore political theory within Canada that help us better understand social identity and cleavages though.</h1>
+    <p>Click on any image to navigate.</p>
+</div>
+
+<div class="container">
+    <div class="image-container" onclick="playVideo()">
+        <img src="../assets/img/Home.webp" alt="Home">
+        <div class="text-overlay">Class</div>
+    </div>
+    <div class="image-container">
+        <a href="./RuralvUrban.html">
+            <img src="../assets/img/UR.webp" alt="Urban vs Rural">
+            <div class="text-overlay">Urban vs Rural</div>
+        </a>
+    </div>
+    <div class="image-container">
+        <a href="./Parties.html">
+            <img src="../assets/img/POLS.webp" alt="Politics">
+            <div class="text-overlay">Politics</div>
+        </a>
+    </div>
+    <div class="image-container">
+        <a href="#section6">
+            <img src="../assets/img/Racse.webp" alt="Race">
+            <div class="text-overlay">Race</div>
+        </a>
+    </div>
+</div>
+
+<div class="video-container" id="videoContainer">
+    <span class="close-btn" onclick="closeVideo()">&times;</span>
+    <video id="videoPlayer" controls>
+        <source src="../assets/audio/HomeVidCadPOLS.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+<script>
+function playVideo() {
+    var videoContainer = document.getElementById('videoContainer');
+    var videoPlayer = document.getElementById('videoPlayer');
+    videoContainer.style.display = 'flex';
+    videoPlayer.play();
+}
+
+function closeVideo() {
+    var videoContainer = document.getElementById('videoContainer');
+    var videoPlayer = document.getElementById('videoPlayer');
+    videoContainer.style.display = 'none';
+    videoPlayer.pause();
+    videoPlayer.currentTime = 0; // Reset video to start
+}
+</script>
+
+</body>
+</html>
+
