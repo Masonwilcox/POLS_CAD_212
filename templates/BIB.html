@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Bibliography with Smooth Movements</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #000066; /* Dark blue background */
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            background-color: #000044; /* Slightly darker blue for the header */
+        }
+        .word {
+            position: absolute;
+            white-space: nowrap;
+            user-select: none;
+        }
+        .stop-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FF4500;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            z-index: 1000;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff; /* Bootstrap primary blue */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>Bibliography</header>
+    <a href="./VanMap.html" class="back-button">Back</a>
+    <div id="biblio-container" style="padding-top: 80px;"></div> <!-- Adjust padding to account for header -->
+    <button class="stop-button" onclick="organizeBibliography()">Organize</button>
+
+    <script>
+        const citations = [
+            `Thompson, Debra. "Is Race Political?" Canadian Journal of Political Science / Revue Canadienne de Science Politique, vol. 41, no. 3, 2008, pp. 480-88. Accessed 5 Feb. 2024.`,
+            `The Social Context: Cleavages and Identity. "Class." Chapter 8. Accessed 5 Feb. 2024.`,
+            `The Social Context: Cleavages and Identity. "Urban-Rural Location, Religion, and Age." Chapter 9. Accessed 5 Feb. 2024.`,
+            `The Social Context: Cleavages and Identity. "Political Parties and the Party System." Chapter 14. Accessed 5 Feb. 2024.`,
+            `The Social Context: Cleavages and Identity. "Political Parties and Brokerage System." Chapter 24. Written by R. Kenneth Carty and William Cross. Accessed 5 Feb. 2024.`,
+            `Nevitte, Neil, and Mebs Kanji. "“New” Cleavages, Value Diversity, and Democratic Governance." In Canadian Politics, 4th ed. 2004. Accessed 5 Feb. 2024.`
+        ];
+    
+        let moving = true;
+        let words = [];
+        let velocities = [];
+        let animationFrameId; // To hold the requestAnimationFrame ID for cancellation
+    
+        function createWords() {
+            const container = document.getElementById('biblio-container');
+            citations.forEach((citation, citationIndex) => {
+                const wordsInCitation = citation.split(' ');
+                wordsInCitation.forEach((wordText, wordOrder) => {
+                    const word = document.createElement('span');
+                    word.textContent = wordText + ' ';
+                    word.className = 'word';
+                    word.dataset.citationIndex = citationIndex;
+                    word.dataset.wordOrder = wordOrder;
+                    container.appendChild(word);
+                    words.push(word);
+                });
+            });
+            positionWordsRandomly();
+        }
+    
+        function positionWordsRandomly() {
+            words.forEach((word, index) => {
+                const x = Math.random() * (window.innerWidth - word.offsetWidth);
+                const y = Math.random() * (window.innerHeight - word.offsetHeight);
+                word.style.left = `${x}px`;
+                word.style.top = `${y}px`;
+    
+                const angle = Math.random() * 2 * Math.PI;
+                const speed = 1 + Math.random();
+                velocities[index] = { dx: Math.cos(angle) * speed, dy: Math.sin(angle) * speed };
+            });
+            animateWords();
+        }
+    
+        function animateWords() {
+            if (!moving) return;
+    
+            words.forEach((word, index) => {
+                let dx = velocities[index].dx;
+                let dy = velocities[index].dy;
+                let newX = word.offsetLeft + dx;
+                let newY = word.offsetTop + dy;
+    
+                if (newX <= 0 || newX + word.offsetWidth >= window.innerWidth) {
+                    velocities[index].dx = -dx;
+                }
+                if (newY <= 0 || newY + word.offsetHeight >= window.innerHeight) {
+                    velocities[index].dy = -dy;
+                }
+    
+                word.style.left = `${newX}px`;
+                word.style.top = `${newY}px`;
+            });
+    
+            animationFrameId = requestAnimationFrame(animateWords);
+        }
+    
+        function organizeBibliography() {
+            moving = false;
+            cancelAnimationFrame(animationFrameId);
+
+            words.forEach((word) => {
+                word.style.transition = 'left 3s ease, top 3s ease';
+            });
+
+            let yPos = 100; // Start further down to accommodate header
+            citations.forEach((citation, citationIndex) => {
+                // Fixed start position from the left for all lines
+                let xPos = 50; // Adjust this value to push text further from the left as needed
+
+                citation.split(' ').forEach((_, wordOrder) => {
+                    const word = words.find(w => parseInt(w.dataset.citationIndex) === citationIndex && parseInt(w.dataset.wordOrder) === wordOrder);
+                    if (word) {
+                        word.style.left = `${xPos}px`;
+                        word.style.top = `${yPos}px`;
+                        xPos += word.offsetWidth + 5; // Move xPos for the next word
+                    }
+                });
+
+                yPos += 40; // Increase spacing between lines
+            });
+        }
+
+
+    
+        createWords();
+    </script>
+    
+</body>
+</html>
