@@ -72,6 +72,9 @@
             width: 100%;
             height: 100%;
         }
+        .audio-container {
+            display: none;
+        }
         .close-btn {
             position: fixed;
             top: 20px;
@@ -100,7 +103,7 @@
 
 <div class="header-text">
     <h1>Explore political theory within Canada that help us better understand social identity and cleavages though.</h1>
-    <p>Click on any image to navigate.</p>
+    <p>Click on any image to navigate and make sure to have your audio turned on.</p>
 </div>
 
 <div class="container">
@@ -120,12 +123,11 @@
             <div class="text-overlay">Politics</div>
         </a>
     </div>
-    <div class="image-container">
-        <a href="./Race.html">
-            <img src="../assets/img/Racse.webp" alt="Race">
-            <div class="text-overlay">Race</div>
-        </a>
+    <div class="image-container" onclick="toggleAudio()">
+        <img src="../assets/img/Racse.webp" alt="Race">
+        <div class="text-overlay">Race</div>
     </div>
+
     <div class="image-container">
         <a href="./BIB.html">
             <img src="../assets/img/BIB.webp" alt="Race">
@@ -142,7 +144,19 @@
     </video>
 </div>
 
+<audio id="audioPlayer" src="../assets/audio/Racw.wav" type="audio/mp3"></audio>
+
 <script>
+function toggleAudio() {
+    var audioPlayer = document.getElementById('audioPlayer');
+    if (audioPlayer.paused) {
+        audioPlayer.play();
+    } else {
+        audioPlayer.pause();
+        audioPlayer.currentTime = 0;
+    }
+}
+
 function playVideo() {
     var videoContainer = document.getElementById('videoContainer');
     var videoPlayer = document.getElementById('videoPlayer');
