@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Bibliography with Smooth Movements</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: gainsboro;
+            color: black;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 24px;
+            background-color: gainsboro;
+        }
+        .word, .link {
+            position: absolute;
+            white-space: nowrap;
+            user-select: none;
+            transition: top 2s ease, left 2s ease; /* Smooth transition for movement */
+        }
+        .word {
+            color: #000;
+        }
+        .stop-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #FF4500;
+            color: white;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: none;
+            z-index: 1000;
+        }
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>Bibliography</header>
+    <a href="./Video_Page.html" class="back-button">Back</a>
+    <div id="biblio-container" style="padding-top: 80px;"></div>
+    <button class="stop-button" onclick="organizeBibliography()">Organize</button>
+
+    <script>
+        const citations = [
+        `Arriagada, Paula, Farhana Khanam, and Yujiro Sano. “Chapter 6: Political Participation, Civic Engagement and Caregiving among Youth in Canada.” Statcan, July 19, 2022. <a href="https://www150.statcan.gc.ca/n1/pub/42-28-0001/2021001/article/00006-eng.htm">https://www150.statcan.gc.ca/n1/pub/42-28-0001/2021001/article/00006-eng.htm</a>.`,
+        `“Climate Strike in Vancouver: SFU CMNS Perspective.” SFU. Accessed April 2, 2024. <a href="https://www.sfu.ca/communication/news-and-community/studentnews/cimatestrike.html">https://www.sfu.ca/communication/news-and-community/studentnews/cimatestrike.html</a>.`,
+        `Deer, Ka’nhehsí:io. “10 Indigenous Candidates Elected to the House of Commons | CBC News.” CBCnews, October 22, 2019. <a href="https://www.cbc.ca/news/indigenous/indigenous-candidates-elected-2019-federal-election-1.5330380">https://www.cbc.ca/news/indigenous/indigenous-candidates-elected-2019-federal-election-1.5330380</a>.`,
+        `Gasparikova, Daniela. “Violence against Women Politicians: An Unacceptable Cost of Gender Equality.” UNDP, June 29, 2021. <a href="https://www.undp.org/eurasia/blog/violence-against-women-politicians-unacceptable-cost-gender-equality">https://www.undp.org/eurasia/blog/violence-against-women-politicians-unacceptable-cost-gender-equality</a>.`,
+        `“Medical Doctor in Canada: Wages - Job Bank.” Jobbank, March 19, 2024. <a href="https://www.jobbank.gc.ca/marketreport/wages-occupation/24432/ca">https://www.jobbank.gc.ca/marketreport/wages-occupation/24432/ca</a>.`,
+        `Premji, Zahra. “3 Years into the COVID-19 Pandemic, Anti-Asian Hate Still Prevalent in Metro Vancouver: Advocates.” CBCnews, January 26, 2023. <a href="https://www.cbc.ca/news/canada/british-columbia/anti-asian-hate-in-metro-vancouver-2023-1.6725671">https://www.cbc.ca/news/canada/british-columbia/anti-asian-hate-in-metro-vancouver-2023-1.6725671</a>.`,
+        `Stober, Eric. “Justin Trudeau’s Pay Will Top $400K on April 1 as Politicians Get Raises - National.” Global News, March 31, 2024. <a href="https://globalnews.ca/news/10391946/justin-trudeau-mps-pay-raise">https://globalnews.ca/news/10391946/justin-trudeau-mps-pay-raise</a>.`
+        ];
+
+    
+        let moving = true;
+        let elements = [];
+        let velocities = [];
+        let animationFrameId;
+
+        function createElements() {
+            const container = document.getElementById('biblio-container');
+            citations.forEach((citation, citationIndex) => {
+                const parts = citation.split(/(<a href=".*?">.*?<\/a>)/g);
+                parts.forEach((part, partIndex) => {
+                    if (part.includes('<a href=')) {
+                        const link = document.createElement('span');
+                        link.innerHTML = part;
+                        link.className = 'link';
+                        link.dataset.citationIndex = citationIndex;
+                        link.dataset.wordOrder = partIndex;
+                        container.appendChild(link);
+                        elements.push(link);
+                    } else {
+                        const words = part.split(' ');
+                        words.forEach((word, wordIndex) => {
+                            if (word.trim() !== '') {
+                                const wordSpan = document.createElement('span');
+                                wordSpan.textContent = word + ' ';
+                                wordSpan.className = 'word';
+                                wordSpan.dataset.citationIndex = citationIndex;
+                                wordSpan.dataset.wordOrder = partIndex * 1000 + wordIndex; // Ensure unique order within citation
+                                container.appendChild(wordSpan);
+                                elements.push(wordSpan);
+                            }
+                        });
+                    }
+                });
+            });
+            positionElementsRandomly();
+        }
+
+        function positionElementsRandomly() {
+            elements.forEach(element => {
+                const x = Math.random() * (window.innerWidth - element.offsetWidth);
+                const y = Math.random() * (window.innerHeight - element.offsetHeight);
+                element.style.left = `${x}px`;
+                element.style.top = `${y}px`;
+
+                const angle = Math.random() * 2 * Math.PI;
+                const speed = 2 + Math.random() * 500; // Increased speed for more dynamic movement
+                velocities.push({ dx: Math.cos(angle) * speed, dy: Math.sin(angle) * speed });
+            });
+            animateElements();
+        }
+
+        function animateElements() {
+            if (!moving) return;
+
+            elements.forEach((element, index) => {
+                let dx = velocities[index].dx;
+                let dy = velocities[index].dy;
+                let newX = element.offsetLeft + dx;
+                let newY = element.offsetTop + dy;
+
+                if (newX <= 0 || newX + element.offsetWidth >= window.innerWidth) {
+                    velocities[index].dx = -dx;
+                }
+                if (newY <= 0 || newY + element.offsetHeight >= window.innerHeight) {
+                    velocities[index].dy = -dy;
+                }
+
+                element.style.left = `${newX}px`;
+                element.style.top = `${newY}px`;
+            });
+
+            animationFrameId = requestAnimationFrame(animateElements);
+        }
+    
+        function organizeBibliography() {
+            moving = false;
+            cancelAnimationFrame(animationFrameId);
+
+            let xPos = 50;
+            let yPos = 100;
+
+            elements.forEach((element, index) => {
+                if (element.dataset.citationIndex !== (elements[index - 1]?.dataset.citationIndex || -1)) {
+                    yPos += 60; // Double space before a new citation
+                    xPos = 50;
+                } else if (xPos + element.offsetWidth >= window.innerWidth) {
+                    xPos = 50;
+                    yPos += 30; // Single space for a new line in the same citation
+                }
+
+                element.style.left = `${xPos}px`;
+                element.style.top = `${yPos}px`;
+                xPos += element.offsetWidth + 5; // Add space between words
+            });
+        }
+
+        createElements();
+    </script>
+</body>
+</html>
