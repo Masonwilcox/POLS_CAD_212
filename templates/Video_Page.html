@@ -44,13 +44,12 @@
         }
         .text-overlay {
             position: absolute;
-            bottom: 20px;
+            bottom: 18vh;
             left: 0;
             width: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Dark background for text visibility */
-            color: white;
+            color: palegreen;
             text-align: center;
-            font-size: 20px;
+            font-size: 8vh;
         }
         .image-container:hover img {
             transform: scale(1.1);
@@ -119,7 +118,7 @@
         <img src="../assets/img/Youth.webp" alt="Youth">
         <div class="text-overlay">Youth</div>
     </div>
-    <div class="image-container" onclick="playVideo()">
+    <div class="image-container" onclick="playVideo2()">
         <img src="../assets/img/FN.webp" alt="FN">
         <div class="text-overlay">First Nations</div>
     </div>
@@ -136,10 +135,20 @@
 <div class="video-container" id="videoContainer">
     <span class="close-btn" onclick="closeVideo()">&times;</span>
     <video id="videoPlayer" controls>
-        <source src="../assets/audio/HomeVidCadPOLS.mp4" type="video/mp4">
+        <source src="../assets/audio/Women_Video.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 </div>
+
+<div class="video-container" id="videoContainer2">
+    <span class="close-btn" onclick="closeVideo2()">&times;</span>
+    <video id="videoPlayer2" controls>
+        <source src="../assets/audio/FN.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+
 
 <audio id="audioPlayer" src="../assets/audio/JP.wav" type="audio/wav"></audio>
 <audio id="audioPlayer2" src="../assets/audio/Youth.wav" type="audio/wav"></audio>
@@ -194,6 +203,21 @@ function playVideo() {
 function closeVideo() {
     var videoContainer = document.getElementById('videoContainer');
     var videoPlayer = document.getElementById('videoPlayer');
+    videoContainer.style.display = 'none';
+    videoPlayer.pause();
+    videoPlayer.currentTime = 0; // Reset video to start
+}
+
+function playVideo2() {
+    var videoContainer = document.getElementById('videoContainer2');
+    var videoPlayer = document.getElementById('videoPlayer2');
+    videoContainer.style.display = 'flex';
+    videoPlayer.play();
+}
+
+function closeVideo2() {
+    var videoContainer = document.getElementById('videoContainer2');
+    var videoPlayer = document.getElementById('videoPlayer2');
     videoContainer.style.display = 'none';
     videoPlayer.pause();
     videoPlayer.currentTime = 0; // Reset video to start

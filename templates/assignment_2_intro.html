@@ -20,8 +20,8 @@
         }
 
         img {
-            width: 33vw;
-            height: 25vw;
+            width: 30vw;
+            height: 22vw;
             padding: 1vw;
             cursor: pointer;
         }
@@ -79,22 +79,77 @@
             text-decoration: none;
             z-index: 2;
         }
+        .header-text {
+            text-align: center;
+            width: 80%;
+            height: 10%;
+            color: wheat;
+        }
+        .image-container {
+            position: relative;
+            width: 30vw;
+            height: 22vw;
+            cursor: pointer; /* Make it clear it's clickable */
+            overflow: hidden; /* Ensure the text doesn't overflow */
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.5s ease; /* Smooth transition for zoom effect */
+        }
+
+        .image-container:hover img {
+            transform: scale(1.1); /* Zoom effect on hover */
+        }
+
+        .text-overlay {
+            position: absolute;
+            bottom: 1vh;
+            left: 0;
+            width: 100%;
+            color: lightsalmon;
+            font-weight: bold;
+            text-align: center;
+            font-size: 5vh;
+        }
+
+        .image-container:hover .text-overlay {
+            opacity: 1; /* Show text on hover */
+        }
     </style>
 </head>
 <body>
 
-<a href="../index.html" class="button">Head Back to Assignments</a>
-<a href="./Video_Page.html" class="back-button">Go To Next Page</a>
+    <div class="header-text">
+        <h1>Learn More About the Major Political Infrastructure of Canada</h1>
+        <p>Click on any image to navigate.</p>
+    </div>
+
+    <a href="../index.html" class="button">Head Back to Assignments</a>
+    <a href="./Video_Page.html" class="back-button">Go To Next Page</a>
 
     <div id="app">
         <div class="image-row">
-            <img src="../assets/img/Poltical_Parties.webp" alt="Image 1" @click="displayTextBox(imageTexts.image1)">
-            <img src="../assets/img/elected_Officials.webp" alt="Image 2" @click="displayTextBox(imageTexts.image2)">
+            <div class="image-container" @click="displayTextBox(imageTexts.image1)">
+                <img src="../assets/img/Poltical_Parties.webp" alt="Image 1">
+                <div class="text-overlay">Political Parties</div>
+            </div>
+            <div class="image-container" @click="displayTextBox(imageTexts.image2)">
+                <img src="../assets/img/elected_Officials.webp" alt="Image 2">
+                <div class="text-overlay">Elected Officials</div>
+            </div>
         </div>
         <div class="image-row">
-            <img src="../assets/img/Social_Groups.webp" alt="Image 3" @click="displayTextBox(imageTexts.image3)">
-            <img src="../assets/img/Social_media.webp" alt="Image 4" @click="displayTextBox(imageTexts.image4)">
-        </div>
+            <div class="image-container" @click="displayTextBox(imageTexts.image3)">
+                <img src="../assets/img/Social_Groups.webp" alt="Image 3">
+                <div class="text-overlay">Civil Society Groups</div>
+            </div>
+            <div class="image-container" @click="displayTextBox(imageTexts.image4)">
+                <img src="../assets/img/Social_media.webp" alt="Image 4">
+                <div class="text-overlay">Social Media</div>
+            </div>
+        </div>        
         <div class="overlay" v-bind:class="{ 'active': show }" @click="closeTextBox"></div>
         <div class="text-box" v-if="show">{{ message }}</div>
     </div>
@@ -108,10 +163,10 @@
                     show: false,
                     message: '',
                     imageTexts: {
-                        image1: '\'At the heart of political representation lie political parties. The fundamental idea behind political parties is to serve as conduits through which the aspirations, concerns, and voices of the populace are channelled to Parliament Hill. Initially, the concept was straightforward: a political party would act as the architect of policy, a platform for political dialogue, and a bridge between the individual citizen and the intricate machinery of government. However, this ideal, which arguably reached its zenith in the first half of the 20th century, has significantly declined. Younger generations are increasingly less likely to vote; in the last election, 18 to 30-year-olds were at least 5% less likely to participate than any other age group. This growing distrust is not unfounded and is validated repeatedly. As a result, there has been a rise in "strategic voting" or "tactical voting," where individuals vote for a party not because they align with its values or leadership but to prevent the opposition party from gaining power. While tactical voting may always be a necessity for a minority of the country, since no single party can satisfy everyone, the escalating discontent with modern governments stems from the reality that the majority of voters find themselves strategically voting election after election. Ultimately, this leads to a populace that not only distrusts its government but has reached a point of apathy towards political outcomes, which is a truly dangerous slope to begin sliding down.\'',
-                        image2: '\'Elected officials play a crucial role in ensuring that the platforms of political parties are translated into action, aligning with the party\'s objectives. However, there is a burgeoning discontent with political parties, and this dissatisfaction extends to elected officials as well. Abraham Lincoln famously stated that the government should be "of the people, by the people, for the people." Yet, there\'s a pervasive sentiment, especially among minority groups, that the government is neither of the people nor for the people, and it\'s only by a technicality that it is by the people. This disillusionment is exacerbated by political campaigns that have become almost exclusively focused on slander, preventing the electorate from making informed decisions about their officials based on anything other than gossip about who is deemed less unfavourable. The substantial salaries of politicians further fuel the divide between them and the Canadian public. As of April 1, 2024, Prime Minister Trudeau will earn $406,200, while “the base pay for members of Parliament will increase to $203,100 from $194,600 a year.” To put this into perspective, the average annual salary in Canada in 2021 was $59,300, meaning that the starting salary for an MP is approximately 3.5 times that of the average Canadian. Additionally, new MPs earn double that of a new doctor and about the same as the median salary for all doctors in the country. Moreover, Mr. Trudeau’s salary sits comfortably among our country\'s most highly trained and highest-earning professionals. This significant pay disparity drives a wedge between the people and their elected officials, a divide deepened by officials\' frequent failure to fulfill their promises. The growing perception is that elected officials, rather than alleviating the challenges faced by their constituents, are increasingly contributing to them, a truly regrettable situation given their pivotal role in sustaining democracy.\'',
-                        image3: '\'Civil society groups, while not directly situated within Parliament Hill or the House of Commons, wield a significant influence on the politics that shape Canada. A substantial number of Canadians engage with civil society groups at various points in their lives. From children participating in sports clubs to adults engaging with environmental and conservation groups, human rights organizations, or religious and faith-based entities, the diversity of involvement provides a tangible reflection of Canadians\' values and priorities, extending beyond the mere act of voting in an election. The choices Canadians make about which groups to join and dedicate their time to offer crucial insights into the nation\'s collective interests. For example, climate change groups in Vancouver have organized rallies that attracted thousands of supporters, demonstrating the power of collective action in steering government policies at all levels toward addressing public concerns. Additionally, lobbying groups such as the Canadian Council for Refugees, the Canadian Snowbird Association, or the Public Interest Advocacy Centre play pivotal roles in conveying public sentiment to the ruling party and politicians across all government levels. Given their significant role in representing the populace, it\'s imperative for the government to pay attention to civil society groups. Despite their crucial role, these groups are often overlooked, a neglect that can lead to disconnects between government actions and public needs. For instance, while exact participation rates vary, it\'s estimated that a significant percentage of Canadians are involved in some form of volunteering or group participation, highlighting the breadth of engagement across the country.\'',
-                        image4: 'This is "Image 4" with "quotes" and \'single quotes\''
+                        image1: 'At the heart of political representation lie Political Parties. The fundamental idea behind political parties is to serve as conduits through which the aspirations, concerns, and voices of the populace are channelled to Parliament Hill. Initially, the concept was straightforward: a political party would act as the architect of policy, a platform for political dialogue, and a bridge between the individual citizen and the intricate machinery of government. However, this ideal, which arguably reached its zenith in the first half of the 20th century, has significantly declined. Younger generations are increasingly less likely to vote; in the last election, 18 to 30-year-olds were at least 5% less likely to participate than any other age group. This growing distrust is not unfounded and is validated repeatedly. As a result, there has been a rise in "strategic voting" or "tactical voting," where individuals vote for a party not because they align with its values or leadership but to prevent the opposition party from gaining power. While tactical voting may always be a necessity for a minority of the country, since no single party can satisfy everyone, the escalating discontent with modern governments stems from the reality that the majority of voters find themselves strategically voting election after election. Ultimately, this leads to a populace that not only distrusts its government but has reached a point of apathy towards political outcomes, which is a truly dangerous slope to begin sliding down.',
+                        image2: 'Elected Officials play a crucial role in ensuring that the platforms of political parties are translated into action, aligning with the party\'s objectives. However, there is a burgeoning discontent with political parties, and this dissatisfaction extends to elected officials as well. Abraham Lincoln famously stated that the government should be "of the people, by the people, for the people." Yet, there\'s a pervasive sentiment, especially among minority groups, that the government is neither of the people nor for the people, and it\'s only by a technicality that it is by the people. This disillusionment is exacerbated by political campaigns that have become almost exclusively focused on slander, preventing the electorate from making informed decisions about their officials based on anything other than gossip about who is deemed less unfavourable. The substantial salaries of politicians further fuel the divide between them and the Canadian public. As of April 1, 2024, Prime Minister Trudeau will earn $406,200, while “the base pay for members of Parliament will increase to $203,100 from $194,600 a year.” To put this into perspective, the average annual salary in Canada in 2021 was $59,300, meaning that the starting salary for an MP is approximately 3.5 times that of the average Canadian. Additionally, new MPs earn double that of a new doctor and about the same as the median salary for all doctors in the country. Moreover, Mr. Trudeau’s salary sits comfortably among our country\'s most highly trained and highest-earning professionals. This significant pay disparity drives a wedge between the people and their elected officials, a divide deepened by officials\' frequent failure to fulfill their promises. The growing perception is that elected officials, rather than alleviating the challenges faced by their constituents, are increasingly contributing to them, a truly regrettable situation given their pivotal role in sustaining democracy.',
+                        image3: 'Civil Society Groups, while not directly situated within Parliament Hill or the House of Commons, wield a significant influence on the politics that shape Canada. A substantial number of Canadians engage with civil society groups at various points in their lives. From children participating in sports clubs to adults engaging with environmental and conservation groups, human rights organizations, or religious and faith-based entities, the diversity of involvement provides a tangible reflection of Canadians\' values and priorities, extending beyond the mere act of voting in an election. The choices Canadians make about which groups to join and dedicate their time to offer crucial insights into the nation\'s collective interests. For example, climate change groups in Vancouver have organized rallies that attracted thousands of supporters, demonstrating the power of collective action in steering government policies at all levels toward addressing public concerns. Additionally, lobbying groups such as the Canadian Council for Refugees, the Canadian Snowbird Association, or the Public Interest Advocacy Centre play pivotal roles in conveying public sentiment to the ruling party and politicians across all government levels. Given their significant role in representing the populace, it\'s imperative for the government to pay attention to civil society groups. Despite their crucial role, these groups are often overlooked, a neglect that can lead to disconnects between government actions and public needs. For instance, while exact participation rates vary, it\'s estimated that a significant percentage of Canadians are involved in some form of volunteering or group participation, highlighting the breadth of engagement across the country.',
+                        image4: 'Social Media has undeniably reshaped the political landscape in Canada, offering a powerful platform for connection, dialogue, and mobilization. Its ability to instantly link individuals across Canada\'s expansive geography democratizes information sharing and provides a unique space for political engagement and discourse. However, the impact of social media on politics is multifaceted and not without its complications. One of the more concerning developments is the rise of echo chambers, which are increasingly prevalent due to the algorithms employed by social media platforms. These algorithms tend to present users with content that aligns with their existing beliefs and interests, reinforcing existing perspectives and often marginalizing dissenting voices. This phenomenon can intensify political polarization, as users become ensconced in their ideological bubbles. The echo chamber effect is exacerbated by the tendency for the most active social media users to often represent more extreme viewpoints, which can skew the perception of public opinion and amplify fringe narratives. The result is a distorted political discourse where moderate and nuanced perspectives are drowned out by louder, more radical voices. The power of social media to rapidly organize and mobilize is vividly illustrated by events like the Trucker Convoy. This event demonstrated social media\'s capability to quickly gather individuals from across the nation, showcasing its strength as an organizational tool. While this can be positive, facilitating engagement and activism, it also poses challenges, especially when mobilization is based on misinformation or aims to undermine democratic processes. Furthermore, the rapid dissemination of information on social media, while a boon for awareness and engagement, also poses the risk of spreading misinformation and disinformation. The speed at which content can go viral often outpaces the ability to verify its accuracy, leading to the proliferation of false narratives that can significantly impact public opinion and trust.'
                     }
                 };
             },
